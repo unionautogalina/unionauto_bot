@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 BOT_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
