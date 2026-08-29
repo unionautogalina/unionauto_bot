@@ -79,11 +79,9 @@ def inner(*, back_to: str = "menu", extra=None) -> InlineKeyboardMarkup:
 def contacts_kb() -> InlineKeyboardMarkup:
     return ikb([
         [("🗺 Открыть на карте (2ГИС)", ("url", c.MAP_2GIS))],
-        [("☎️ Позвонить бесплатно (8-800)", ("url", f"tel:+{c.PHONE_TEL}"))],
-        [("📱 Мобильный / WhatsApp", ("url", f"tel:+{c.MOBILE_TEL}"))],
-        [("💬 Telegram", ("url", f"https://t.me/{c.ADMIN_USERNAME}")),
-         ("🟢 WhatsApp", ("url", c.WHATSAPP))],
-        [("🔵 MAX", ("url", c.MAX_MESSENGER)), ("✉️ Email", ("url", f"mailto:{c.EMAIL}"))],
+        [("💬 Написать в Telegram", ("url", f"https://t.me/{c.ADMIN_USERNAME}"))],
+        [("🟢 WhatsApp", ("url", c.WHATSAPP))],
+        [("🔵 MAX", ("url", c.MAX_MESSENGER))],
         [("🌐 Сайт", ("url", c.SITE))],
         BACK,
     ])
