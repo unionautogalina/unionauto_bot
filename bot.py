@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ -*- coding: utf-8 -*-
 """
 Telegram-бот компании Union Auto.
 Запуск:  python bot.py
@@ -267,7 +267,7 @@ async def req_budget(m: Message, state: FSMContext):
             print(f"Ошибка отправки админу: {e}")
 
     # Отправляем клиенту подтверждение
-    await m.answer(t.REQUEST_SUCCESS, reply_markup=kb.main_menu())
+    await m.answer(t.REQUEST_DONE, reply_markup=kb.main_menu())
 
 
 # ─────────────────────────────────────────────────────── ЗАПУСК ───────────────────────────────────────────────────────
