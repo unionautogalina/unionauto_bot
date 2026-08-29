@@ -1,4 +1,4 @@
--*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 """
 Telegram-бот компании Union Auto.
 Запуск:  python bot.py
