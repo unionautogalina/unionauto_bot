@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Telegram-бот компании Union Auto.
 Запуск:  python bot.py
@@ -26,7 +26,6 @@ import config as c
 import keyboards as kb
 import texts as t
 
-# Читаем токен из переменной окружения Railway
 BOT_TOKEN = os.getenv("TELEGRAM_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("❌ TELEGRAM_TOKEN не установлена! Добавь её в Railway Variables!")
@@ -38,9 +37,8 @@ logger.info(f"🚀 Бот запускается с токеном: {BOT_TOKEN[:
 router = Router()
 
 
-# ─────────────────────────────────────────────────────── ПОМОЩНИКИ ───────────────────────────────────────────────────────
+# ─── ПОМОЩНИКИ ───
 async def show(target, text: str, keyboard):
-    """Показать раздел: правим сообщение, если пришли с кнопки."""
     if isinstance(target, CallbackQuery):
         try:
             await target.message.edit_text(
@@ -55,7 +53,7 @@ async def show(target, text: str, keyboard):
         await target.answer(text, reply_markup=keyboard, disable_web_page_preview=True)
 
 
-# ─────────────────────────────────────────────────────── СТАРТ / МЕНЮ ───────────────────────────────────────────────────────
+# ─── СТАРТ / МЕНЮ ───
 @router.message(CommandStart())
 async def cmd_start(m: Message, state: FSMContext):
     await state.clear()
@@ -79,12 +77,12 @@ async def cb_menu(q: CallbackQuery, state: FSMContext):
     await show(q, t.MENU, kb.main_menu())
 
 
-# ─────────────────────────────────────────────────────── РАЗДЕЛЫ ───────────────────────────────────────────────────────
+# ─── РАЗДЕЛЫ ───
 @router.callback_query(F.data == "about")
 async def cb_about(q: CallbackQuery):
     await show(q, t.ABOUT, kb.inner(extra=[
-        ["🌐 Сайт компании", ("url", c.SITE)],
-        ["📢 Наш канал", ("url", c.TG_CHANNEL)],
+        [("🌐 Сайт компании", ("url", c.SITE))],
+        [("📢 Наш канал", ("url", c.TG_CHANNEL))],
     ]))
 
 
@@ -96,24 +94,24 @@ async def cb_cats(q: CallbackQuery):
 @router.callback_query(F.data == "cars")
 async def cb_cars(q: CallbackQuery):
     await show(q, t.CARS, kb.inner(back_to="cats", extra=[
-        ["🚘 Легковые в наличии", ("url", c.SITE_STOCK)],
-        ["🛠 Как проходит покупка", "path_cars"],
+        [("🚘 Легковые в наличии", ("url", c.SITE_STOCK))],
+        [("🛠 Как проходит покупка", "path_cars")],
     ]))
 
 
 @router.callback_query(F.data == "trucks")
 async def cb_trucks(q: CallbackQuery):
     await show(q, t.TRUCKS, kb.inner(back_to="cats", extra=[
-        ["🚛 Смотреть в наличии", ("url", c.SITE_STOCK)],
-        ["🛠 Как проходит покупка", "path_trucks"],
+        [("🚛 Смотреть в наличии", ("url", c.SITE_STOCK))],
+        [("🛠 Как проходит покупка", "path_trucks")],
     ]))
 
 
 @router.callback_query(F.data == "machinery")
 async def cb_machinery(q: CallbackQuery):
     await show(q, t.MACHINERY, kb.inner(back_to="cats", extra=[
-        ["🏗 Спецтехника в наличии", ("url", c.SITE_STOCK)],
-        ["💳 Лизинг на спецтехнику", "finance"],
+        [("🏗 Спецтехника в наличии", ("url", c.SITE_STOCK))],
+        [("💳 Лизинг на спецтехнику", "finance")],
     ]))
 
 
@@ -160,23 +158,23 @@ async def cb_promo_bonus(q: CallbackQuery):
 @router.callback_query(F.data == "stock")
 async def cb_stock(q: CallbackQuery):
     await show(q, t.STOCK, kb.inner(extra=[
-        ["🚘 Наличие на сайте", ("url", c.SITE_STOCK)],
-        ["📢 #вналичии в канале", ("url", c.TG_HASHTAG_STOCK)],
+        [("🚘 Наличие на сайте", ("url", c.SITE_STOCK))],
+        [("📢 #вналичии в канале", ("url", c.TG_HASHTAG_STOCK))],
     ]))
 
 
 @router.callback_query(F.data == "brought")
 async def cb_brought(q: CallbackQuery):
     await show(q, t.BROUGHT, kb.inner(extra=[
-        ["📸 Смотреть привезённое", ("url", c.SITE_BROUGHT)],
+        [("📸 Смотреть привезённое", ("url", c.SITE_BROUGHT))],
     ]))
 
 
 @router.callback_query(F.data == "reviews")
 async def cb_reviews(q: CallbackQuery):
     await show(q, t.REVIEWS, kb.inner(extra=[
-        ["🗺 Отзывы в 2ГИС", ("url", c.MAP_2GIS)],
-        ["⭐️ Отзывы на сайте", ("url", c.SITE_REVIEWS)],
+        [("🗺 Отзывы в 2ГИС", ("url", c.MAP_2GIS))],
+        [("⭐️ Отзывы на сайте", ("url", c.SITE_REVIEWS))],
     ]))
 
 
@@ -195,7 +193,7 @@ async def cb_faq(q: CallbackQuery):
     await show(q, t.FAQ, kb.inner())
 
 
-# ─────────────────────────────────────────────────────── ЗАЯВКА (FSM) ───────────────────────────────────────────────────────
+# ─── ЗАЯВКА (FSM) ───
 class Req(StatesGroup):
     name = State()
     phone = State()
@@ -249,7 +247,6 @@ async def req_budget(m: Message, state: FSMContext):
     data = await state.get_data()
     await state.clear()
 
-    # Формируем сообщение для админа
     msg = f"""
 📝 НОВАЯ ЗАЯВКА:
 
@@ -259,18 +256,16 @@ async def req_budget(m: Message, state: FSMContext):
 💰 Бюджет: {m.text}
 """
 
-    # Отправляем админу
     for admin_id in c.ADMIN_IDS:
         try:
             await m.bot.send_message(admin_id, msg)
         except Exception as e:
             print(f"Ошибка отправки админу: {e}")
 
-    # Отправляем клиенту подтверждение
     await m.answer(t.REQUEST_DONE, reply_markup=kb.main_menu())
 
 
-# ─────────────────────────────────────────────────────── ЗАПУСК ───────────────────────────────────────────────────────
+# ─── ЗАПУСК ───
 async def main():
     bot = Bot(
         token=BOT_TOKEN,
@@ -286,7 +281,6 @@ async def main():
         BotCommand(command="zayavka", description="📝 Оставить заявку"),
     ])
 
-    # Начинаем
     try:
         print("✅ БОТ ЗАПУЩЕН И РАБОТАЕТ!")
         await dp.start_polling(bot)
